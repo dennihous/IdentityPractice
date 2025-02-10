@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace IdentityPractice.Models
 {
@@ -7,6 +8,7 @@ namespace IdentityPractice.Models
         public int StudentId { get; set; }
         public string Name { get; set; }
 
+        [JsonIgnore]
         public List<Enrollment>? Enrollments { get; set; }
     }
 }

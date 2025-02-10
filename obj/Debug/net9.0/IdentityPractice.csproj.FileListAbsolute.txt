@@ -287,3 +287,4 @@
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/IdentityPractice.pdb
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/IdentityPractice.genruntimeconfig.cache
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/ref/IdentityPractice.dll
+/Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/IdentityPractice.sourcelink.json
