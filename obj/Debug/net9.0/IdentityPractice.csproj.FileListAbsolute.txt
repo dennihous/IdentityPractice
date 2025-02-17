@@ -288,3 +288,7 @@
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/IdentityPractice.genruntimeconfig.cache
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/ref/IdentityPractice.dll
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/obj/Debug/net9.0/IdentityPractice.sourcelink.json
+/Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/MailKit.dll
+/Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/MimeKit.dll
+/Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/BouncyCastle.Crypto.dll
