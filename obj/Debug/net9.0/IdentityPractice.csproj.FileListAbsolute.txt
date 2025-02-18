@@ -292,3 +292,4 @@
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/MailKit.dll
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/MimeKit.dll
 /Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/BouncyCastle.Crypto.dll
+/Users/dennishouston/westminster/webApplicationDevelopment/IdentityPractice/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll

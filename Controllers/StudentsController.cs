@@ -13,95 +13,142 @@ namespace IdentityPractice.Controllers
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        private readonly SchoolContext _context;
+        private readonly IStudentService _studentService;
+        private readonly ILogger<StudentsController> _logger;
 
-        public StudentsController(SchoolContext context)
+        public StudentsController(IStudentService studentService, ILogger<StudentsController> logger)
         {
-            _context = context;
+            _studentService = studentService;
+            _logger = logger;
         }
 
         // GET: api/Students
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+            try
+            {
+                _logger.LogInformation("Fetching all students.");
+                var students = await _studentService.GetAllStudentsAsync();
+                if (students == null || !students.Any())
+                {
+                    _logger.LogWarning("No students found.");
+                    return NotFound("No students found.");
+                }
+                return Ok(students);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching students.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // GET: api/Students/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Student>> GetStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-
-            if (student == null)
+            try
             {
-                return NotFound();
-            }
+                _logger.LogInformation($"Fetching student with ID {id}");
+                var student = await _studentService.GetStudentByIdAsync(id);
 
-            return student;
+                if (student == null)
+                {
+                    _logger.LogWarning($"Student with ID {id} not found.");
+                    return NotFound($"Student with ID {id} not found.");
+                }
+
+                return Ok(student);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching the student.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // PUT: api/Students/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudent(int id, Student student)
         {
-            if (id != student.StudentId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(student).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (id != student.StudentId)
+                {
+                    _logger.LogWarning("Student ID mismatch.");
+                    return BadRequest("Student ID mismatch.");
+                }
+
+                await _studentService.UpdateStudentAsync(id, student);
+                _logger.LogInformation($"Student with ID {id} updated.");
+                return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(id))
+                if (await _studentService.GetStudentByIdAsync(id) == null)
                 {
-                    return NotFound();
+                    _logger.LogWarning($"Student with ID {id} not found for update.");
+                    return NotFound($"Student with ID {id} not found.");
                 }
                 else
                 {
+                    _logger.LogError("Error updating student.");
                     throw;
                 }
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the student.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // POST: api/Students
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Student>> PostStudent(Student student)
         {
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (student == null)
+                {
+                    _logger.LogWarning("Received empty student object.");
+                    return BadRequest("Student data cannot be null.");
+                }
 
-            return CreatedAtAction("GetStudent", new { id = student.StudentId }, student);
+                await _studentService.AddStudentAsync(student);
+                _logger.LogInformation($"Student with ID {student.StudentId} created.");
+                return CreatedAtAction("GetStudent", new { id = student.StudentId }, student);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the student.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // DELETE: api/Students/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            try
             {
-                return NotFound();
+                var student = await _studentService.GetStudentByIdAsync(id);
+                if (student == null)
+                {
+                    _logger.LogWarning($"Student with ID {id} not found.");
+                    return NotFound($"Student with ID {id} not found.");
+                }
+
+                await _studentService.DeleteStudentAsync(id);
+                _logger.LogInformation($"Student with ID {id} deleted.");
+                return NoContent();
             }
-
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Students.Any(e => e.StudentId == id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the student.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }
